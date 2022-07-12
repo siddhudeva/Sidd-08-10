@@ -1,17 +1,17 @@
 pipeline {
     agent any
-    environment{
+    environment {
         VERSION = "${env.BUILD_ID}"
     }
     stages {
         stage('SonarQualityCheck') {
-            agent{
+            agent {
                 docker {
                     image 'openjdk:11'
                 }
             }
-            steps{
-                script{
+            steps {
+                script {
                     withSonarQubeEnv(credentialsId: 'Sonar_token') {
                         sh 'chmod +x gradlew'
                         sh './gradlew sonarqube'
@@ -24,13 +24,13 @@ pipeline {
 //                                error "Pipeline aborted due to quality gate failure: ${qg.status}"
 //                                slackSend channel: 'slack-jenkins', message: 'From Pipeline'
 //                            }
-                        //}
- //                   }
+                    //}
+                    //                   }
                 }
             }
         }
         stage('Docker build & push to ECR') {
-            steps{
+            steps {
                 script {
                     //withCredentials([string(credentialsId: 'idofcred', variable 'variable')]) {
                     sh '''
@@ -44,27 +44,26 @@ pipeline {
                 }
             }
         }
-        stage('identifing the misconfiguration using datree plugin'){
-            steps{
-                 script{
-                        sh '''
+        stage('identifing the misconfiguration using datree plugin') {
+            steps {
+                script {
+                    sh '''
                             cd /root/.jenkins/workspace/CICD_javaProject/Kubernetes/
                             helm datree test myapp/
                         '''
-                    }
                 }
             }
         }
-        stage('pushing helmcharts to nexus'){
+        stage('pushing helmcharts to nexus') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'NEXUS_PASSWORD', variable: 'NEXUS_PASS')]) {
                         sh '''
-                            HELMVER=$( helm show chart myapp/ | grep version | cut -d: -f 2 | tr -d ' ')
-                            cd /root/.jenkins/workspace/CICD_javaProject/Kubernetes/                          
-                            tar -czvf  myapp-${HELMVER}.tgz myapp/
-                            curl -u admin:$NEXUS_PASS http://18.209.231.78:8081/repository/helm-hosted/ --upload-file myapp-${HELMVER}.tgz -v
-                        '''
+                             HELMVER=$( helm show chart myapp/ | grep version | cut -d: -f 2 | tr -d ' ')
+                             cd /root/.jenkins/workspace/CICD_javaProject/Kubernetes/                          
+                             tar -czvf  myapp-${HELMVER}.tgz myapp/
+                             curl -u admin:$NEXUS_PASS http://18.209.231.78:8081/repository/helm-hosted/ --upload-file myapp-${HELMVER}.tgz -v
+                           '''
                     }
                 }
             }
@@ -75,3 +74,4 @@ pipeline {
             cleanWs()
         }
     }
+}

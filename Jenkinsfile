@@ -19,11 +19,11 @@ pipeline {
                     timeout(time: 15, unit: 'MINUTES') { // If analysis takes longer than indicated time, then build will be aborted
                     //    waitForQualityGate abortPipeline: true
                     //    script{
-                            def qg = waitForQualityGate() // Waiting for analysis to be completed
-                            if(qg.status != 'OK'){ // If quality gate was not met, then present error
-                                error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                                slackSend channel: 'slack-jenkins', message: 'From Pipeline'
-                            }
+//                            def qg = waitForQualityGate() // Waiting for analysis to be completed
+//                            if(qg.status != 'OK'){ // If quality gate was not met, then present error
+//                                error "Pipeline aborted due to quality gate failure: ${qg.status}"
+//                                slackSend channel: 'slack-jenkins', message: 'From Pipeline'
+//                            }
                         //}
                     }
                 }
@@ -41,6 +41,17 @@ pipeline {
                         docker rmi java-project-${VERSION}:latest
                        '''
                     //}
+                }
+            }
+        }
+        stage{
+            steps('identifing the misconfiguration using datree plugin') {
+                steps{
+                    script{
+                        dir('kubernetes/') {
+                            sh 'helm datree test myapp/'
+                        }
+                    }
                 }
             }
         }

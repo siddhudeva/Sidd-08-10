@@ -46,7 +46,7 @@ pipeline {
         }
         stage('identifing the misconfiguration using datree plugin'){
             steps{
-                    script{
+                 script{
                         sh '''
                             cd /root/.jenkins/workspace/CICD_javaProject/Kubernetes/
                             helm datree test myapp/
@@ -55,9 +55,9 @@ pipeline {
                 }
             }
         }
-        stage('pushing helmcharts to nexus'){
-            steps{
-                script{
+        stage('pushing helmcharts to nexus') {
+            steps {
+                script {
                     withCredentials([string(credentialsId: 'NEXUS_PASSWORD', variable: 'NEXUS_PASS')]) {
                         sh '''
                             HELM-VER=$(helm show chart myapp/ | grep version | cut -d: -f 2 | tr -d ' ')

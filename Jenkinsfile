@@ -16,7 +16,7 @@ pipeline {
                         sh 'chmod +x gradlew'
                         sh './gradlew sonarqube'
                     }
-                    timeout(time: 15, unit: 'MINUTES') { // If analysis takes longer than indicated time, then build will be aborted
+//                    timeout(time: 15, unit: 'MINUTES') { // If analysis takes longer than indicated time, then build will be aborted
                     //    waitForQualityGate abortPipeline: true
                     //    script{
 //                            def qg = waitForQualityGate() // Waiting for analysis to be completed
@@ -25,7 +25,7 @@ pipeline {
 //                                slackSend channel: 'slack-jenkins', message: 'From Pipeline'
 //                            }
                         //}
-                    }
+ //                   }
                 }
             }
         }
@@ -46,7 +46,6 @@ pipeline {
         }
         stage{
             steps('identifing the misconfiguration using datree plugin') {
-                steps{
                     script{
                         dir('kubernetes/') {
                             sh 'helm datree test myapp/'

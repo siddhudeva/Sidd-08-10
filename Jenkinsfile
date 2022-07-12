@@ -55,7 +55,7 @@ pipeline {
                 }
             }
         }
-        stage('pushing helmcharts to nexus') {
+        stage('pushing helmcharts to nexus'){
             steps {
                 script {
                     withCredentials([string(credentialsId: 'NEXUS_PASSWORD', variable: 'NEXUS_PASS')]) {

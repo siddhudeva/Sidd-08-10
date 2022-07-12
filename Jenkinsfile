@@ -22,6 +22,7 @@ pipeline {
                             def qg = waitForQualityGate() // Waiting for analysis to be completed
                             if(qg.status != 'OK'){ // If quality gate was not met, then present error
                                 error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                                slackSend channel: 'slack-jenkins', message: 'From Pipeline'
                             }
                         //}
                     }
@@ -32,13 +33,14 @@ pipeline {
             steps{
                 script {
                     //withCredentials([string(credentialsId: 'idofcred', variable 'variable')]) {
-                        sh '''
+                    sh '''
                         aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/x4k0v2o9
                         docker build -t java-project-${VERSION} .
                         docker tag java-project-${VERSION}:latest public.ecr.aws/x4k0v2o9/java-project:latest
                         docker push public.ecr.aws/x4k0v2o9/java-project-${VERSION}:latest
                         docker rmi java-project-${VERSION}:latest
                        '''
+                    slackSend channel: 'slack-jenkins', message: 'Docker image pushed'
                     //}
                 }
             }

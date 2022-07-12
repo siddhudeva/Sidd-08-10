@@ -48,7 +48,7 @@ pipeline {
             steps{
                     script{
                         sh '''
-                            cd Kubernetes/
+                            cd /root/.jenkins/workspace/CICD_javaProject/Kubernetes/
                             helm datree test myapp/
                            '''
                     }

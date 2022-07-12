@@ -39,7 +39,7 @@ pipeline {
                         docker tag javagradle-private:latest 941746065449.dkr.ecr.us-east-1.amazonaws.com/javagradle-private:latest
                         docker push 941746065449.dkr.ecr.us-east-1.amazonaws.com/javagradle-private:latest
                         docker rmi javagradle-private
-                       '''
+                   '''
                     //}
                 }
             }
@@ -50,7 +50,7 @@ pipeline {
                         sh '''
                             cd /root/.jenkins/workspace/CICD_javaProject/Kubernetes/
                             helm datree test myapp/
-                           '''
+                        '''
                     }
                 }
             }

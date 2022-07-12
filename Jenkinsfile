@@ -55,6 +55,20 @@ pipeline {
                 }
             }
         }
+        stage('pushing helmcharts to nexus') {
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'NEXUS_PASSWORD', variable: 'NEXUS_PASS')]) {
+                        sh '''
+                            HELM-VER=$(helm show chart myapp/ | grep version | cut -d: -f 2 | tr -d \'\')
+                            cd /root/.jenkins/workspace/CICD_javaProject/Kubernetes/                          
+                            tar -czvf  myapp-${HELM-VER}.tgz myapp/
+                            curl -u admin:$NEXUS_PASS http://18.209.231.78:8081/repository/helm-hosted/ --upload-file myapp-${HELM-VER}.tgz -v
+                        '''
+                    }
+                }
+            }
+        }
     }
     post {
         always {

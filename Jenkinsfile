@@ -57,7 +57,6 @@ pipeline {
     }
     post {
         always {
-            slackSend channel: 'slack-jenkins', message: 'Docker image pushed and pipeline is succeseded'
-            cleanWS()
+            cleanWs()
         }
     }

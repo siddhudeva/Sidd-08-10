@@ -35,10 +35,10 @@ pipeline {
                     //withCredentials([string(credentialsId: 'idofcred', variable 'variable')]) {
                     sh '''
                         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 941746065449.dkr.ecr.us-east-1.amazonaws.com
-                        docker build -t javagradle-private-${VERSION} .
-                        docker tag javagradle-private-${VERSION}:latest 941746065449.dkr.ecr.us-east-1.amazonaws.com/javagradle-private-${VERSION}:latest
-                        docker push 941746065449.dkr.ecr.us-east-1.amazonaws.com/javagradle-private-${VERSION}:latest
-                        docker rmi javagradle-private-${VERSION}
+                        docker build -t javagradle-private .
+                        docker tag javagradle-private:latest 941746065449.dkr.ecr.us-east-1.amazonaws.com/javagradle-private:latest
+                        docker push 941746065449.dkr.ecr.us-east-1.amazonaws.com/javagradle-private:latest
+                        docker rmi javagradle-private
                        '''
                     //}
                 }

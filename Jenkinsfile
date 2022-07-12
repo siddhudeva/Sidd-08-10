@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment{
+        VERSION = "${env.BUILD_ID}"
+    }
     stages {
         stage('SonarQualityCheck') {
             agent{
@@ -28,12 +31,15 @@ pipeline {
         stage('Docker build & push to ECR') {
             steps{
                 script {
-                    sh '''
+                    //withCredentials([string(credentialsId: 'idofcred', variable 'variable')]) {
+                        sh '''
                         aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/x4k0v2o9
-                        docker build -t java-project .
-                        docker tag java-project:latest public.ecr.aws/x4k0v2o9/java-project:latest
-                        docker push public.ecr.aws/x4k0v2o9/java-project:latest
+                        docker build -t java-project-${VERSION} .
+                        docker tag java-project-${VERSION}:latest public.ecr.aws/x4k0v2o9/java-project:latest
+                        docker push public.ecr.aws/x4k0v2o9/java-project-${VERSION}:latest
+                        docker rmi java-project-${VERSION}:latest
                        '''
+                    //}
                 }
             }
         }

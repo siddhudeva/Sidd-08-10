@@ -48,7 +48,7 @@ pipeline {
             steps{
                     script{
                         sh '''
-                            cd kubernetes/
+                            cd Kubernetes/
                             helm datree test myapp/
                            '''
                     }

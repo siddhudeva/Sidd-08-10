@@ -40,10 +40,15 @@ pipeline {
                         docker push public.ecr.aws/x4k0v2o9/java-project-${VERSION}:latest
                         docker rmi java-project-${VERSION}:latest
                        '''
-                    slackSend channel: 'slack-jenkins', message: 'Docker image pushed'
                     //}
                 }
             }
+        }
+    }
+    post {
+        always {
+            slackSend channel: 'slack-jenkins', message: 'Docker image pushed and pipeline is succeseded'
+            cleanWS()
         }
     }
 }

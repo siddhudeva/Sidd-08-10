@@ -44,8 +44,8 @@ pipeline {
                 }
             }
         }
-        stage{
-            steps('identifing the misconfiguration using datree plugin') {
+        stage('identifing the misconfiguration using datree plugin'){
+            steps{
                     script{
                         dir('kubernetes/') {
                             sh 'helm datree test myapp/'
